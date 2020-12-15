@@ -4,11 +4,11 @@ import { UploadOptions } from '../types'
 import { BASE_URL } from './constants'
 
 export class File {
-	link: string
-	url: string
-	secureUrl: string
+	readonly link: string
+	readonly url: string
+	readonly secureUrl: string
 	
-	constructor(public id: string) {
+	constructor(readonly id: string) {
 		this.link = `https://filein.io/${id}`
 		this.url = `http://u.filein.io/${id}`
 		this.secureUrl = `https://storage.googleapis.com/u.filein.io/${id}`

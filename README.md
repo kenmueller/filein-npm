@@ -6,20 +6,56 @@
 npm i filein
 ```
 
-## File
+## Table of Contents
+
+### Models
+
+- [User](#user)
+- [File](#file)
+
+### Methods
+
+- [Upload](#upload)
+- [Get File](#get-file)
+- [Get User](#get-user)
+
+## Models
+
+### User
 
 ```ts
-class File {
+interface User {
 	id: string
-	link: string
-	url: string
-	secureUrl: string
-	
-	constructor(id: string)
+	slug: string
+	name: string
+	files: number
+	comments: number
 }
 ```
 
-## Upload
+### File
+
+```ts
+interface File {
+	id: string
+	name: string
+	type: string
+	size: number
+	owner: string | null
+	comments: number
+	uploaded: Date
+	public: boolean
+	link: string
+	url: string
+	secureUrl: string
+}
+```
+
+## Methods
+
+### Upload
+
+#### Definition
 
 ```ts
 interface UploadOptions {
@@ -32,7 +68,7 @@ interface UploadOptions {
 function upload(options: UploadOptions): Promise<File>
 ```
 
-## Example
+#### Example
 
 ```js
 const { upload } = require('filein')
@@ -47,4 +83,41 @@ const file = await upload({
 })
 
 console.log(file)
+```
+
+### Get File
+
+#### Definition
+
+```ts
+function getFile(id: string): Promise<File | null>
+```
+
+#### Example
+
+```js
+const { getFile } = require('filein')
+
+console.log(await getFile('EMppZ8g3Fu.jpg'))
+```
+
+### Get User
+
+#### Definition
+
+```ts
+// Faster
+function getUserFromId(id: string): Promise<User | null>
+
+// Slower
+function getUserFromSlug(slug: string): Promise<User | null>
+```
+
+#### Example
+
+```js
+const { getUserFromId, getUserFromSlug } = require('filein')
+
+console.log(await getUserFromId('R61liLnxF4bojbAtmjgtsSl9PMt2'))
+console.log(await getUserFromSlug('ken-mueller'))
 ```

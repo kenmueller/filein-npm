@@ -1,19 +1,8 @@
 import 'isomorphic-unfetch'
 
-import { UploadOptions } from '../types'
+import { User, UploadOptions } from '../types'
 import { BASE_URL } from './constants'
-
-export class File {
-	readonly link: string
-	readonly url: string
-	readonly secureUrl: string
-	
-	constructor(readonly id: string) {
-		this.link = `https://filein.io/${id}`
-		this.url = `http://u.filein.io/${id}`
-		this.secureUrl = `https://storage.googleapis.com/u.filein.io/${id}`
-	}
-}
+import { get, dataToFile } from './utils'
 
 export const upload = async ({ name, type, public: isPublic, data }: UploadOptions) => {
 	const response = await fetch(`${BASE_URL}/files`, {
@@ -29,10 +18,23 @@ export const upload = async ({ name, type, public: isPublic, data }: UploadOptio
 		})
 	})
 	
-	const text = await response.text()
-	
 	if (response.ok)
-		return new File(text)
+		return dataToFile(await response.json())
 	
-	throw new Error(text)
+	throw new Error(await response.text())
+}
+
+export const getFile = async (id: string) => {
+	const response = await get(`${BASE_URL}/files/${id}`)
+	return response && dataToFile(await response.json())
+}
+
+export const getUserFromId = async (id: string) => {
+	const response = await get(`${BASE_URL}/users/id/${id}`)
+	return response && response.json() as Promise<User>
+}
+
+export const getUserFromSlug = async (slug: string) => {
+	const response = await get(`${BASE_URL}/users/slug/${slug}`)
+	return response && response.json() as Promise<User>
 }

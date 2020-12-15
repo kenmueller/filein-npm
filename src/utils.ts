@@ -16,6 +16,7 @@ export const get = async (url: string) => {
 
 export const dataToFile = (data: FileData): File => ({
 	...data,
+	uploaded: new Date(data.uploaded),
 	link: `https://filein.io/${data.id}`,
 	url: `http://u.filein.io/${data.id}`,
 	secureUrl: `https://storage.googleapis.com/u.filein.io/${data.id}`

@@ -13,11 +13,12 @@ export interface FileData {
 	size: number
 	owner: string | null
 	comments: number
-	uploaded: Date
+	uploaded: number
 	public: boolean
 }
 
 export interface File extends FileData {
+	uploaded: Date
 	link: string
 	url: string
 	secureUrl: string

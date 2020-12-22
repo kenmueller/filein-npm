@@ -14,7 +14,7 @@ export const upload = async ({ name, type, public: isPublic, data }: UploadOptio
 			name,
 			type,
 			public: isPublic,
-			data: data.toString('binary')
+			data: data.toString('base64')
 		})
 	})
 	

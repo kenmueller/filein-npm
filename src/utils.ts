@@ -1,6 +1,15 @@
-import 'isomorphic-unfetch'
+import _fetch from 'isomorphic-unfetch'
 
 import { FileData, File } from '../types'
+import Error from './error'
+
+export const fetch: typeof _fetch = (...args) => {
+	try {
+		return _fetch(...args)
+	} catch ({ message }) {
+		throw new Error(Error.INTERNAL, message)
+	}
+}
 
 export const get = async (url: string) => {
 	const response = await fetch(url)
@@ -11,7 +20,7 @@ export const get = async (url: string) => {
 	if (response.status === 404)
 		return null
 	
-	throw new Error(await response.text())
+	throw await Error.fromResponse(response)
 }
 
 export const dataToFile = (data: FileData): File => ({

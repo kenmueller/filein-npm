@@ -1,3 +1,13 @@
+class FileinError extends Error {
+	static readonly BAD_REQUEST = 400
+	static readonly INTERNAL = 500
+	
+	readonly status: number
+	readonly message: string
+}
+
+export { FileinError as Error }
+
 export interface User {
 	id: string
 	slug: string

@@ -1,15 +1,16 @@
-import 'isomorphic-unfetch'
-
 import { User, UploadOptions } from '../types'
 import { BASE_URL } from './constants'
-import { get, dataToFile } from './utils'
+import { fetch, get, dataToFile } from './utils'
+import Error from './error'
+
+export { Error }
 
 export const upload = async ({ apiKey, name, type, public: isPublic, data }: UploadOptions) => {
-	if (typeof apiKey !== 'string') throw new Error('Invalid API key')
-	if (typeof name !== 'string') throw new Error('Invalid name')
-	if (typeof type !== 'string') throw new Error('Invalid type')
-	if (typeof isPublic !== 'boolean') throw new Error('Invalid access level')
-	if (!Buffer.isBuffer(data)) throw new Error('Invalid data')
+	if (typeof apiKey !== 'string') throw new Error(Error.BAD_REQUEST, 'Invalid API key')
+	if (typeof name !== 'string') throw new Error(Error.BAD_REQUEST, 'Invalid name')
+	if (typeof type !== 'string') throw new Error(Error.BAD_REQUEST, 'Invalid type')
+	if (typeof isPublic !== 'boolean') throw new Error(Error.BAD_REQUEST, 'Invalid access level')
+	if (!Buffer.isBuffer(data)) throw new Error(Error.BAD_REQUEST, 'Invalid data')
 	
 	const response = await fetch(`${BASE_URL}/files`, {
 		method: 'POST',
@@ -28,25 +29,25 @@ export const upload = async ({ apiKey, name, type, public: isPublic, data }: Upl
 	if (response.ok)
 		return dataToFile(await response.json())
 	
-	throw new Error(await response.text())
+	throw await Error.fromResponse(response)
 }
 
 export const getFile = async (id: string) => {
-	if (typeof id !== 'string') throw new Error('Invalid ID')
+	if (typeof id !== 'string') throw new Error(Error.BAD_REQUEST, 'Invalid ID')
 	
 	const response = await get(`${BASE_URL}/files/${id}`)
 	return response && dataToFile(await response.json())
 }
 
 export const getUserFromId = async (id: string) => {
-	if (typeof id !== 'string') throw new Error('Invalid ID')
+	if (typeof id !== 'string') throw new Error(Error.BAD_REQUEST, 'Invalid ID')
 	
 	const response = await get(`${BASE_URL}/users/id/${id}`)
 	return response && response.json() as Promise<User>
 }
 
 export const getUserFromSlug = async (slug: string) => {
-	if (typeof slug !== 'string') throw new Error('Invalid slug')
+	if (typeof slug !== 'string') throw new Error(Error.BAD_REQUEST, 'Invalid slug')
 	
 	const response = await get(`${BASE_URL}/users/slug/${slug}`)
 	return response && response.json() as Promise<User>

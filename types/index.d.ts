@@ -25,6 +25,7 @@ export interface File extends FileData {
 }
 
 export interface UploadOptions {
+	apiKey: string
 	name: string
 	type: string
 	public: boolean
